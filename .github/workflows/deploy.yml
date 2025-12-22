@@ -1,5 +1,5 @@
 name: deploy.yml
-on: [push]
+on: [ push ]
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -15,6 +15,12 @@ jobs:
 
       - name: Run tests
         run: bun test
+        env:
+          API_KEY: ${{secrets.API_KEY }}
+          TEST_ENV: ${{vars.TEST_ENV}}
 
       - name: Start the application
         run: bun run start
+        env:
+          API_KEY: ${{secrets.API_KEY }}
+          TEST_ENV: ${{vars.TEST_ENV}}
