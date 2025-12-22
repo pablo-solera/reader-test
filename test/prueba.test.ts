@@ -9,6 +9,10 @@ describe("Environmental variables", () => {
     test("process.env.TEST_ENV is not empty", () => {
         expect(process.env.TEST_ENV).not.toBeEmpty()
     })
+
+    test("process.env.API_KEY is not empty", () => {
+        expect(process.env.API_KEY).not.toBeEmpty()
+    })
 });
 
 describe("General purpose", () => {
