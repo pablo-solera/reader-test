@@ -1,0 +1,16 @@
+{
+  "name": "nodetest",
+  "module": "index.ts",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "scripts":{
+"start":"bun run src/index.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
