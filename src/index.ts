@@ -2,7 +2,6 @@ import { $ } from "bun";
 
 const response = await fetch("https://example.com");
 
-const
 const newVar = process.env.TEST_ENV
 
 // Use Response as stdin.
