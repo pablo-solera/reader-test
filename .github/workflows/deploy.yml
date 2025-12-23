@@ -32,8 +32,8 @@ jobs:
         id: get_version
         run: |
           # Extrae el nombre del proyecto de package.json
-          PROJECT_NAME=$(jq -r .name package.json)
-          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_OUTPUT
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=VERSION" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
