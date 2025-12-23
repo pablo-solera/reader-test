@@ -1,24 +1,55 @@
-name: deploy.yml
-on: [ push ]
+name: CI Bun App
+
+on:
+  push:
+    branches:
+      - master
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
       API_KEY: ${{secrets.API_KEY }}
       TEST_ENV: ${{vars.TEST_ENV}}
+      DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/reader-test
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - name: Install and set up Bun
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Run tests
         run: bun test
 
-      - name: Start the application
-        run: bun run start
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Get project name from package.json
+        id: get_version
+        run: |
+          # Extrae el nombre del proyecto de package.json
+          PROJECT_NAME=$(jq -r .name package.json)
+          echo "PROJECT_NAME=$PROJECT_NAME" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image with version ${{ steps.get_version.outputs.version }}"
+          docker build \
+            -t $DOCKER_IMAGE:latest \
+            -t $DOCKER_IMAGE:${{ steps.get_version.outputs.version }} \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push $DOCKER_IMAGE:latest
+          docker push $DOCKER_IMAGE:${{ steps.get_version.outputs.version }}
