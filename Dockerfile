@@ -11,7 +11,7 @@ RUN bun install
 COPY . .
 ENV TEST_ENV=algodeprueba
 # Exponer puerto (ajusta si usas otro)
-EXPOSE 3000
+EXPOSE 3001
 
 # Comando de arranque
 CMD ["bun", "run", "start"]
